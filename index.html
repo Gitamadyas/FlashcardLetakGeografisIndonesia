@@ -1,55 +1,391 @@
-<!DOCTYPE html>
-<html lang="id"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Game Jelajah Geografis Indonesia</title>
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Jelajah Indonesia - Flashcard Geografis</title>
 <style>
-:root{--navy:#12304a;--blue:#168aad;--green:#219653;--gold:#f4b942;--cream:#fffaf0}*{box-sizing:border-box}body{margin:0;min-height:100vh;padding:18px;background:linear-gradient(145deg,#73d7e4,#b9df9a);font-family:system-ui,'Segoe UI',sans-serif;color:var(--navy);display:flex;align-items:center;justify-content:center}.card{width:100%;max-width:680px;background:#fff;padding:clamp(18px,4vw,30px);border-radius:24px;box-shadow:0 12px 32px #12304a30;position:relative}.banner{background:linear-gradient(120deg,#087e8b,#126782);color:white;text-align:center;border-radius:18px;padding:22px 16px;margin-bottom:22px}.banner h1{font-size:clamp(22px,5vw,30px);margin:0}.banner p{margin:7px 0 0;font-size:14px}.audio-controls{position:absolute;right:22px;top:20px;display:flex;gap:7px;z-index:2}.sound{position:static;border:0;border-radius:20px;padding:7px 10px;background:#fff;color:#12304a;font-weight:800;cursor:pointer;font-size:12px;box-shadow:0 2px 6px #0002}.music-btn{background:#fff0b8}.input-group{margin:14px 0}label{display:block;font-weight:750;margin-bottom:6px}input{width:100%;padding:13px;border:2px solid #cbd5e1;border-radius:11px;font-size:16px}button{font:inherit}.main-btn{width:100%;border:0;border-radius:12px;padding:14px;background:var(--green);color:white;font-weight:800;font-size:17px;cursor:pointer;box-shadow:0 4px 0 #14723d}.main-btn:active,.option:active{transform:translateY(1px);box-shadow:none}.hidden{display:none!important}.meta{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-weight:750;color:#536779;margin-bottom:12px}.progress{height:10px;background:#e7eef2;border-radius:99px;overflow:hidden;margin-bottom:22px}.bar{height:100%;width:0;background:linear-gradient(90deg,#f4b942,#f28c28);transition:width .25s}.question{font-size:clamp(18px,4vw,22px);font-weight:800;line-height:1.45;margin:0 0 20px}.option{display:block;width:100%;text-align:left;border:2px solid #dce7ed;border-radius:13px;background:#f8fbfd;color:#243b53;padding:14px 15px;margin:10px 0;cursor:pointer;font-weight:650;line-height:1.35}.option:hover{border-color:#168aad;background:#edfaff}.option:disabled{cursor:default}.option.correct{border-color:#219653;background:#e6f8ed}.option.wrong{border-color:#d9485f;background:#fff0f1}.feedback{padding:12px;border-radius:12px;font-weight:750;margin:12px 0}.good{background:#e6f8ed;color:#166534}.bad{background:#fff0f1;color:#9f1239}.score-circle{width:132px;height:132px;border-radius:50%;border:7px solid #219653;background:#e6f8ed;display:flex;align-items:center;justify-content:center;font-size:34px;font-weight:900;color:#166534;margin:22px auto}.result{text-align:center}.small{font-size:13px;color:#64748b;line-height:1.5}.status{padding:12px;background:#f8fafc;border-radius:12px;font-size:14px;font-weight:700;line-height:1.5}.result-feedback{padding:16px 18px;border-radius:16px;margin:16px 0;font-size:17px;font-weight:800;line-height:1.5}.result-feedback.pass{background:#e6f8ed;color:#166534;border:2px solid #86d5a5}.result-feedback.retry{background:#fff4df;color:#8a4b08;border:2px solid #f6cc78}.badge{display:inline-block;background:#fff3cd;color:#785800;border-radius:99px;padding:5px 10px;font-size:12px;font-weight:800;margin-bottom:12px}@media(max-width:420px){body{padding:10px}.card{border-radius:18px;padding:16px}.audio-controls{position:static;justify-content:flex-end;margin:0 0 10px}.sound{display:block;margin:0}.banner{padding:17px 12px}.option{padding:12px}}
-</style></head><body><main class="card"><div class="audio-controls"><button class="sound" id="sound-btn" onclick="toggleSound()">🗣️ Suara: ON</button><button class="sound music-btn" id="music-btn" onclick="toggleMusic()">🎵 Musik: ON</button></div>
-<section id="start-screen"><header class="banner"><h1>🏝️ JELAJAH GEOGRAFIS INDONESIA</h1><p>Game Interaktif IPAS • Kelas V SD</p></header><p>Jawab <b>10 soal pilihan ganda</b>. Setiap jawaban benar bernilai 10 poin. Soal dan urutan pilihan diacak untuk setiap pemain.</p><div class="input-group"><label for="player-name">Nama lengkap</label><input id="player-name" autocomplete="name" placeholder="Ketik nama lengkapmu"></div><div class="input-group"><label for="player-class">Kelas</label><input id="player-class" placeholder="Contoh: 5-A"></div><button class="main-btn" onclick="startGame()">🚀 Mulai Tantangan</button><p class="small">Pastikan nama dan kelas benar sebelum mulai. Nilai akan dikirim ke guru setelah 10 soal selesai.</p></section>
-<section id="quiz-screen" class="hidden"><div class="meta"><span id="question-count">Soal 1/10</span><span id="timer-text">⏱️ 00:00</span></div><div class="progress"><div class="bar" id="progress-bar"></div></div><div class="badge">🧭 Misi Penjelajah Indonesia</div><p class="question" id="question-text"></p><div id="options-container"></div><div id="feedback" class="feedback hidden" aria-live="polite"></div></section>
-<section id="result-screen" class="hidden result"><header class="banner"><h1>🎉 Tantangan Selesai!</h1><p>Terima kasih sudah menjelajah Indonesia.</p></header><div class="score-circle" id="final-score">0</div><h2 id="result-title"></h2><p id="result-detail"></p><div id="score-feedback" class="result-feedback hidden" role="status" aria-live="polite"></div><div id="status-msg" class="status" aria-live="polite">Sedang mengirim hasil ke guru…</div><p class="small">Nilai maksimum 100. Nilai dihitung dari 10 soal × 10 poin untuk setiap jawaban benar.</p><button class="main-btn" onclick="newPlayer()">👤 Pemain Berikutnya</button></section>
-</main><script>
-const SPREADSHEET_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxdQcPAoCwWVCrIb2GSII8lEumKWhq9PzmL4AHNSquJUpwuQzMif368TpxBou-75PQ/exec";
-const masterQuestions = [{"id": 1, "q": "Perairan sempit yang memisahkan Pulau Sumatra dengan Semenanjung Malaysia disebut …", "options": ["Selat Sunda", "Selat Malaka", "Selat Karimata", "Selat Makassar"], "answer": "Selat Malaka"}, {"id": 2, "q": "Laut yang berada di sebelah utara Sulawesi dan berbatasan dengan perairan Filipina adalah …", "options": ["Laut Banda", "Laut Sulawesi", "Laut Arafura", "Laut Timor"], "answer": "Laut Sulawesi"}, {"id": 3, "q": "Samudra yang membatasi perairan Indonesia di sebelah barat dan selatan adalah …", "options": ["Samudra Pasifik", "Samudra Atlantik", "Samudra Hindia", "Samudra Arktik"], "answer": "Samudra Hindia"}, {"id": 4, "q": "Negara yang berbatasan darat dengan Indonesia di Pulau Kalimantan adalah …", "options": ["Papua Nugini", "Timor-Leste", "Malaysia", "Filipina"], "answer": "Malaysia"}, {"id": 5, "q": "Indonesia terletak di antara Benua Asia dan Australia serta Samudra Hindia dan Pasifik. Ini disebut letak …", "options": ["geologis", "astronomis", "geografis", "topografis"], "answer": "geografis"}, {"id": 6, "q": "Negara yang berbatasan darat dengan Indonesia di Pulau Papua adalah …", "options": ["Timor-Leste", "Papua Nugini", "Australia", "Brunei Darussalam"], "answer": "Papua Nugini"}, {"id": 7, "q": "Perairan di antara Pulau Kalimantan dan Pulau Jawa adalah …", "options": ["Selat Makassar", "Laut Jawa", "Laut Flores", "Selat Bali"], "answer": "Laut Jawa"}, {"id": 8, "q": "Indonesia disebut negara maritim karena …", "options": ["sebagian besar wilayahnya berupa perairan", "semua penduduknya bekerja sebagai nelayan", "seluruh wilayahnya berupa pulau kecil", "tidak memiliki wilayah daratan"], "answer": "sebagian besar wilayahnya berupa perairan"}, {"id": 9, "q": "Pulau yang di sebelah baratnya berbatasan dengan Selat Sunda, di timur dengan Selat Bali, dan di utara dengan Laut Jawa adalah …", "options": ["Sulawesi", "Jawa", "Sumatra", "Halmahera"], "answer": "Jawa"}, {"id": 10, "q": "Garis khayal yang membelah bumi menjadi belahan utara dan selatan serta melintasi Indonesia disebut …", "options": ["garis bujur", "garis khatulistiwa", "garis tanggal", "garis pantai"], "answer": "garis khatulistiwa"}, {"id": 11, "q": "Dampak positif posisi silang Indonesia di bidang sosial budaya adalah …", "options": ["hilangnya seluruh budaya daerah", "terjadinya akulturasi dan pertukaran budaya", "berkurangnya hubungan antarbangsa", "semua bahasa daerah menjadi sama"], "answer": "terjadinya akulturasi dan pertukaran budaya"}, {"id": 12, "q": "Selat yang memisahkan Pulau Kalimantan dan Pulau Sulawesi adalah …", "options": ["Selat Lombok", "Selat Makassar", "Selat Karimata", "Selat Sunda"], "answer": "Selat Makassar"}, {"id": 13, "q": "Negara yang berbatasan darat dengan Indonesia di Pulau Timor adalah …", "options": ["Australia", "Timor-Leste", "Malaysia", "Singapura"], "answer": "Timor-Leste"}, {"id": 14, "q": "Samudra yang berada di sebelah timur Indonesia, terutama di sekitar Papua, adalah …", "options": ["Samudra Hindia", "Samudra Pasifik", "Samudra Atlantik", "Samudra Arktik"], "answer": "Samudra Pasifik"}, {"id": 15, "q": "Dua benua yang mengapit Indonesia adalah …", "options": ["Asia dan Afrika", "Asia dan Australia", "Eropa dan Asia", "Australia dan Antartika"], "answer": "Asia dan Australia"}, {"id": 16, "q": "Dua samudra yang mengapit Indonesia adalah …", "options": ["Hindia dan Pasifik", "Atlantik dan Hindia", "Pasifik dan Arktik", "Atlantik dan Pasifik"], "answer": "Hindia dan Pasifik"}, {"id": 17, "q": "Laut yang berada di sebelah utara Pulau Jawa adalah …", "options": ["Laut Jawa", "Laut Arafura", "Laut Timor", "Laut Banda"], "answer": "Laut Jawa"}, {"id": 18, "q": "Perairan yang memisahkan Pulau Jawa dan Pulau Sumatra adalah …", "options": ["Selat Bali", "Selat Sunda", "Selat Malaka", "Selat Karimata"], "answer": "Selat Sunda"}, {"id": 19, "q": "Perairan yang memisahkan Pulau Jawa dan Pulau Bali adalah …", "options": ["Selat Makassar", "Selat Sunda", "Selat Bali", "Selat Karimata"], "answer": "Selat Bali"}, {"id": 20, "q": "Program kapal yang menghubungkan pelabuhan antarpulau untuk membantu distribusi barang disebut …", "options": ["Tol Laut", "Jalur Sutra", "Jalan Raya", "Angin Muson"], "answer": "Tol Laut"}, {"id": 21, "q": "Hak khusus Indonesia untuk memanfaatkan sumber daya sampai 200 mil laut disebut …", "options": ["laut teritorial", "Zona Ekonomi Eksklusif (ZEE)", "batas udara", "garis khatulistiwa"], "answer": "Zona Ekonomi Eksklusif (ZEE)"}, {"id": 22, "q": "Jika kapal menempuh 1.200 mil laut dengan kecepatan 30 mil laut per jam, waktu yang dibutuhkan adalah …", "options": ["20 jam", "30 jam", "40 jam", "50 jam"], "answer": "40 jam"}, {"id": 23, "q": "Ketika Angin Muson Barat membawa banyak uap air, sebagian wilayah Indonesia umumnya mengalami …", "options": ["musim salju", "musim hujan", "musim gugur", "kemarau panjang"], "answer": "musim hujan"}, {"id": 24, "q": "Salah satu tantangan dari jalur pelayaran yang terbuka adalah …", "options": ["tidak ada kapal asing melintas", "penyelundupan dan penangkapan ikan ilegal", "semua barang menjadi gratis", "laut tidak dapat dimanfaatkan"], "answer": "penyelundupan dan penangkapan ikan ilegal"}, {"id": 25, "q": "Manfaat letak strategis Indonesia bagi ekonomi adalah …", "options": ["membuka peluang perdagangan dan jasa pelabuhan", "menghentikan ekspor dan impor", "mengurangi semua kegiatan pelayaran", "menutup hubungan dengan negara lain"], "answer": "membuka peluang perdagangan dan jasa pelabuhan"}, {"id": 26, "q": "Alat pada peta untuk menunjukkan arah utara, selatan, barat, dan timur disebut …", "options": ["skala", "legenda", "mata angin/orientasi peta", "judul peta"], "answer": "mata angin/orientasi peta"}, {"id": 27, "q": "Negara yang berbatasan darat dengan Indonesia di Kalimantan adalah Malaysia. Pulau tempat perbatasan itu berada ialah …", "options": ["Pulau Sumatra", "Pulau Kalimantan", "Pulau Jawa", "Pulau Sulawesi"], "answer": "Pulau Kalimantan"}, {"id": 28, "q": "Negara yang berbatasan darat dengan Indonesia di Papua adalah Papua Nugini. Perbatasan ini berada di …", "options": ["Pulau Timor", "Pulau Papua", "Pulau Bali", "Pulau Sumatra"], "answer": "Pulau Papua"}, {"id": 29, "q": "Perairan di antara Pulau Sumatra dan Pulau Kalimantan adalah …", "options": ["Selat Karimata", "Selat Bali", "Selat Lombok", "Selat Sunda"], "answer": "Selat Karimata"}, {"id": 30, "q": "Benda visual yang membantu menjelaskan letak dan batas wilayah saat presentasi adalah …", "options": ["peta", "jam dinding", "kalkulator", "penggaris saja"], "answer": "peta"}, {"id": 31, "q": "Mengapa batas wilayah negara yang jelas penting?", "options": ["agar mudah terjadi sengketa", "untuk menjaga kedaulatan dan keamanan wilayah", "agar sumber daya bebas diambil negara lain", "untuk menghapus semua perbatasan"], "answer": "untuk menjaga kedaulatan dan keamanan wilayah"}, {"id": 32, "q": "Sikap yang baik saat kelompok lain presentasi adalah …", "options": ["memotong pembicaraan", "berbicara sendiri", "mendengarkan dan mencatat informasi", "meninggalkan kelas"], "answer": "mendengarkan dan mencatat informasi"}, {"id": 33, "q": "Dampak letak Indonesia di sekitar khatulistiwa adalah …", "options": ["mendapat sinar matahari sepanjang tahun", "mengalami musim salju sepanjang tahun", "tidak pernah terkena sinar matahari", "memiliki empat musim utama"], "answer": "mendapat sinar matahari sepanjang tahun"}, {"id": 34, "q": "Perairan di antara Pulau Kalimantan dan Pulau Sumatra adalah …", "options": ["Selat Karimata", "Selat Makassar", "Selat Bali", "Laut Arafura"], "answer": "Selat Karimata"}, {"id": 35, "q": "Istilah untuk percampuran unsur budaya yang saling berinteraksi disebut …", "options": ["isolasi", "akulturasi", "erosi", "evaporasi"], "answer": "akulturasi"}, {"id": 36, "q": "Salah satu manfaat laut sebagai penghubung antarpulau adalah …", "options": ["memudahkan transportasi dan distribusi barang", "membuat semua pulau terisolasi", "menghentikan perdagangan", "menghilangkan kebutuhan pelabuhan"], "answer": "memudahkan transportasi dan distribusi barang"}];
-let soundEnabled=true, musicEnabled=true, activeQuestions=[], currentQuestionIndex=0, score=0, correctCount=0, playerName='', playerClass='', timerInterval=null, secondsElapsed=0, answered=false;
-let musicContext=null, musicTimer=null, musicStep=0;
-function toggleSound(){soundEnabled=!soundEnabled;document.getElementById('sound-btn').innerText=soundEnabled?'🗣️ Suara: ON':'🔇 Suara: OFF';if(!soundEnabled&&window.speechSynthesis)window.speechSynthesis.cancel()}
-function speakText(t, energetic=false){if(!soundEnabled||!('speechSynthesis'in window))return;window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang='id-ID';u.rate=energetic?1.16:1.08;u.pitch=energetic?1.28:1.12;u.volume=1;const voices=window.speechSynthesis.getVoices();const idVoice=voices.find(v=>/^id(-|_)?ID$/i.test(v.lang))||voices.find(v=>/^id/i.test(v.lang));if(idVoice)u.voice=idVoice;window.speechSynthesis.speak(u)}
-function toggleMusic(){musicEnabled=!musicEnabled;document.getElementById('music-btn').innerText=musicEnabled?'🎵 Musik: ON':'🎵 Musik: OFF';if(musicEnabled)startMusic();else stopMusic()}
-function startMusic(){if(!musicEnabled||musicTimer)return;try{const C=window.AudioContext||window.webkitAudioContext;if(!C)return;musicContext=musicContext||new C();if(musicContext.state==='suspended')musicContext.resume();const melody=[523.25,659.25,783.99,659.25,587.33,698.46,880,698.46,523.25,659.25,783.99,1046.5,783.99,659.25,587.33,523.25];musicTimer=setInterval(()=>{if(!musicContext||!musicEnabled)return;const now=musicContext.currentTime;const f=melody[musicStep%melody.length];musicStep++;const osc=musicContext.createOscillator(),gain=musicContext.createGain();osc.type='sine';osc.frequency.setValueAtTime(f,now);gain.gain.setValueAtTime(0.0001,now);gain.gain.exponentialRampToValueAtTime(0.045,now+0.025);gain.gain.exponentialRampToValueAtTime(0.0001,now+0.24);osc.connect(gain);gain.connect(musicContext.destination);osc.start(now);osc.stop(now+0.25);if(musicStep%4===0){const bass=musicContext.createOscillator(),bg=musicContext.createGain();bass.type='triangle';bass.frequency.value=[130.81,146.83,164.81,196][Math.floor(musicStep/4)%4];bg.gain.setValueAtTime(0.0001,now);bg.gain.exponentialRampToValueAtTime(0.018,now+0.02);bg.gain.exponentialRampToValueAtTime(0.0001,now+0.22);bass.connect(bg);bg.connect(musicContext.destination);bass.start(now);bass.stop(now+0.23)}},270)}catch(e){}}
-function stopMusic(){if(musicTimer){clearInterval(musicTimer);musicTimer=null}}
-function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
-function startGame(){playerName=document.getElementById('player-name').value.trim();playerClass=document.getElementById('player-class').value.trim();if(!playerName||!playerClass){alert('Isi nama lengkap dan kelas terlebih dahulu.');return}if(musicEnabled)startMusic();if(window.speechSynthesis&&soundEnabled)speakText('Hai, '+playerName+'! Selamat datang di Jelajah Geografis Indonesia! Siap jadi penjelajah hebat? Ayo, kita mulai! Semangat!', true);
-// Hindari pemakaian soal yang baru saja muncul pada pemain sebelumnya di perangkat/browser ini.
-let history=[];try{history=JSON.parse(localStorage.getItem('jelajahUsedQuestionIds')||'[]')}catch(e){}
-let unused=masterQuestions.filter(q=>!history.includes(q.id));if(unused.length<10){history=[];unused=[...masterQuestions]}
-activeQuestions=shuffle([...unused]).slice(0,10).map(q=>({...q,shuffledOptions:shuffle([...q.options])}));
-const newIds=activeQuestions.map(q=>q.id);history=[...history,...newIds];if(history.length>masterQuestions.length-10)history=history.slice(-(masterQuestions.length-10));try{localStorage.setItem('jelajahUsedQuestionIds',JSON.stringify(history))}catch(e){}
-currentQuestionIndex=0;score=0;correctCount=0;secondsElapsed=0;clearInterval(timerInterval);document.getElementById('start-screen').classList.add('hidden');document.getElementById('result-screen').classList.add('hidden');document.getElementById('quiz-screen').classList.remove('hidden');timerInterval=setInterval(()=>{secondsElapsed++;document.getElementById('timer-text').innerText='⏱️ '+String(Math.floor(secondsElapsed/60)).padStart(2,'0')+':'+String(secondsElapsed%60).padStart(2,'0')},1000);showQuestion()}
-function showQuestion(){answered=false;const q=activeQuestions[currentQuestionIndex];document.getElementById('question-count').innerText=`Soal ${currentQuestionIndex+1}/10`;document.getElementById('question-text').innerText=q.q;document.getElementById('progress-bar').style.width=(currentQuestionIndex/10*100)+'%';const fb=document.getElementById('feedback');fb.className='feedback hidden';fb.textContent='';const c=document.getElementById('options-container');c.innerHTML='';q.shuffledOptions.forEach((opt,i)=>{const b=document.createElement('button');b.className='option';b.innerText=String.fromCharCode(65+i)+'. '+opt;b.onclick=()=>selectAnswer(opt,q.answer,b);c.appendChild(b)});if(soundEnabled)setTimeout(()=>speakText('Soal nomor '+(currentQuestionIndex+1)+'. '+q.q),180)}
-function selectAnswer(selected,correct,clicked){if(answered)return;answered=true;const buttons=[...document.querySelectorAll('.option')];buttons.forEach(b=>b.disabled=true);const isCorrect=selected===correct;if(isCorrect){score+=10;correctCount++;clicked.classList.add('correct');playTone(true)}else{clicked.classList.add('wrong');buttons.forEach(b=>{if(b.innerText.slice(3)===correct)b.classList.add('correct')});playTone(false)}const fb=document.getElementById('feedback');fb.className='feedback '+(isCorrect?'good':'bad');fb.textContent=isCorrect?'✅ Benar! +10 poin.':'💡 Belum tepat. Jawaban yang benar: '+correct;document.getElementById('progress-bar').style.width=((currentQuestionIndex+1)/10*100)+'%';if(soundEnabled)speakText(isCorrect?'Waaah, hebat sekali! Jawabanmu benar! Kamu dapat sepuluh poin! Lanjutkan semangatmu!':'Ups, belum tepat! Tidak apa-apa, tetap semangat! Jawaban yang benar adalah '+correct, true);setTimeout(()=>{currentQuestionIndex++;if(currentQuestionIndex<10)showQuestion();else finishGame()},1200)}
-function playTone(ok){if(!soundEnabled)return;try{const C=window.AudioContext||window.webkitAudioContext;if(!C)return;const ctx=new C(),osc=ctx.createOscillator(),gain=ctx.createGain();osc.type=ok?'sine':'triangle';osc.frequency.value=ok?660:220;gain.gain.value=.08;osc.connect(gain);gain.connect(ctx.destination);osc.start();osc.stop(ctx.currentTime+.16);osc.onended=()=>ctx.close()}catch(e){}}
-function finishGame(){
-clearInterval(timerInterval);
-document.getElementById('quiz-screen').classList.add('hidden');
-document.getElementById('result-screen').classList.remove('hidden');
-document.getElementById('final-score').innerText=score;
-document.getElementById('result-title').innerText=playerName+' • '+playerClass;
-document.getElementById('result-detail').innerText=`Jawaban benar ${correctCount} dari 10 soal. Waktu pengerjaan ${String(Math.floor(secondsElapsed/60)).padStart(2,'0')}:${String(secondsElapsed%60).padStart(2,'0')}.`;
-const feedbackBox=document.getElementById('score-feedback');
-feedbackBox.classList.remove('hidden','pass','retry');
-if(score>70){
-  feedbackBox.classList.add('pass');
-  feedbackBox.innerHTML='🎉 Selamat, '+escapeHtml(playerName)+'! Nilaimu bagus sekali! Kamu berhasil mendapatkan nilai di atas 70. Terus pertahankan semangat belajarmu! 🌟';
-}else{
-  feedbackBox.classList.add('retry');
-  feedbackBox.innerHTML='💪 Yaaah, jangan menyerah, '+escapeHtml(playerName)+'! Nilaimu masih 70 atau di bawahnya. Yuk, pelajari kembali materi batas wilayah dan letak geografis Indonesia, lalu coba lagi ya! Kamu pasti bisa! 🧭';
-}
-sendDataToSpreadsheet();if(score>70){playCelebration();speakText('Yeayyy, selamat '+playerName+'! Nilaimu '+score+'! Hebat sekali! Pertahankan prestasimu dan terus semangat belajar!',true)}else{speakText('Yaaah, '+playerName+'! Nilaimu '+score+'. Jangan menyerah ya! Ayo pelajari lagi materinya, lalu coba kembali. Kamu pasti bisa!',true)}
-}
-function playCelebration(){if(!soundEnabled)return;try{const C=window.AudioContext||window.webkitAudioContext;if(!C)return;const ctx=musicContext||new C();musicContext=ctx;const notes=[523.25,659.25,783.99,1046.5];notes.forEach((f,i)=>{const o=ctx.createOscillator(),g=ctx.createGain(),t=ctx.currentTime+i*.11;o.type='triangle';o.frequency.value=f;g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(.09,t+.025);g.gain.exponentialRampToValueAtTime(.0001,t+.28);o.connect(g);g.connect(ctx.destination);o.start(t);o.stop(t+.3)})}catch(e){}}
-function escapeHtml(value){return String(value).replace(/[&<>"']/g,function(ch){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]})}
-async function sendDataToSpreadsheet(){const status=document.getElementById('status-msg');status.textContent='⏳ Mengirim nilai ke sistem guru…';const payload={nama:playerName,kelas:playerClass,skor:score,benar:correctCount,totalSoal:10,waktuDetik:secondsElapsed,tanggalWaktu:new Date().toISOString(),sumber:'Game Jelajah Geografis Indonesia'};
-// Apps Script menerima POST teks JSON. Mode no-cors membuat respons tidak bisa dibaca browser;
-// karena itu halaman tidak mengklaim berhasil sebelum dapat diverifikasi oleh guru.
-try{await fetch(SPREADSHEET_WEB_APP_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=UTF-8'},body:JSON.stringify(payload),keepalive:true});status.textContent='📨 Permintaan pengiriman nilai sudah dikirim. Karena Google Apps Script memakai koneksi lintas situs, status simpan tidak dapat dikonfirmasi dari halaman ini. Guru dapat memeriksa Google Sheets untuk memastikan data masuk.';status.style.background='#fff7df';}catch(e){status.textContent='⚠️ Pengiriman belum dapat dilakukan dari perangkat ini. Periksa koneksi internet, lalu beri tahu guru untuk memeriksa Web App Google Apps Script.';status.style.background='#fff0f1';}}
-function newPlayer(){clearInterval(timerInterval);if(window.speechSynthesis)window.speechSynthesis.cancel();document.getElementById('player-name').value='';document.getElementById('player-class').value='';document.getElementById('result-screen').classList.add('hidden');document.getElementById('quiz-screen').classList.add('hidden');document.getElementById('start-screen').classList.remove('hidden');document.getElementById('player-name').focus()}
-</script></body></html>
+*{box-sizing:border-box}
+body{margin:0;background:#07151e;font-family:Arial,sans-serif;color:#17324d}
+.app{max-width:460px;margin:auto;min-height:100vh;background:#f7fbff;overflow:hidden}
+#home{min-height:100vh}
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:space-between;padding:35px 22px 25px;background:linear-gradient(180deg,#087f8c,#16aaa7 50%,#e9f8f5);color:white}
+.hero-top{text-align:center;padding-top:20px}
+h1{font-size:31px;line-height:1.12;margin:12px 0 8px}
+.hero p{font-size:15px;line-height:1.55;margin:auto;max-width:340px}
+.illustration{height:320px;position:relative;display:flex;align-items:center;justify-content:center}
+.sun{position:absolute;width:160px;height:160px;border-radius:50%;background:#ffd66b;top:30px;right:20px}
+.cloud{position:absolute;background:white;border-radius:40px;width:100px;height:30px;opacity:.8}
+.cloud:before,.cloud:after{content:"";position:absolute;background:white;border-radius:50%}
+.cloud:before{width:40px;height:40px;left:15px;top:-20px}
+.cloud:after{width:50px;height:50px;right:10px;top:-25px}
+.c1{top:90px;left:8px}
+.c2{top:160px;right:5px;transform:scale(.72)}
+.adventure{position:relative;width:250px;height:210px;background:#fff;border-radius:40%;box-shadow:0 18px 35px #004b5b44;display:flex;align-items:center;justify-content:center;flex-direction:column;color:#087f8c;transform:rotate(-2deg)}
+.compass{font-size:70px;line-height:1}
+.caption{font-weight:900;font-size:17px;margin-top:8px}
+.mini{font-size:12px;margin-top:5px;color:#557}
+.star{position:absolute;font-size:22px}
+.s1{top:45px;left:60px}
+.s2{top:220px;right:35px}
+.s3{bottom:30px;left:40px}
+.start{width:100%;border:0;border-radius:18px;padding:16px;background:#ffb84d;color:#513100;font-size:17px;font-weight:900;box-shadow:0 8px 0 #d98922;cursor:pointer}
+.start:active{transform:translateY(3px)}
+.credit{font-size:11px;text-align:center;margin-top:12px;color:#e8ffffaa}
+
+#mapScreen,#mission{display:none}
+header{background:linear-gradient(135deg,#008c95,#13b8b0);color:#fff;padding:22px 20px 25px;border-radius:0 0 27px 27px}
+header small{font-weight:800;letter-spacing:.7px}
+header h2{font-size:24px;margin:7px 0}
+header p{margin:0;line-height:1.4;font-size:13px}
+main{padding:18px}
+.tip{background:#fff;border:1px solid #d8e9ef;border-radius:18px;padding:14px;line-height:1.5;margin-bottom:16px;font-size:13px}
+
+.island-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.island-card{border:1px solid #d7e8ed;background:#fff;border-radius:20px;min-height:115px;padding:12px 8px;color:#17465a;font-size:14px;font-weight:800;box-shadow:0 5px 14px #18364a12;cursor:pointer;text-align:center}
+.island-card:active{transform:scale(.96);background:#eafafa}
+.island-card:last-child{grid-column:1 / -1;max-width:calc(50% - 6px);justify-self:center}
+.island-icon{width:60px;height:60px;margin:0 auto 8px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:linear-gradient(145deg,#dff8f5,#bce7ed);font-size:32px}
+
+.back{border:0;background:#e8f4f6;padding:10px 14px;border-radius:12px;font-weight:700;cursor:pointer;color:#17465a}
+.title{text-align:center;font-size:20px;font-weight:800;margin:14px 0 4px}
+.sub{text-align:center;font-size:12px;color:#667b89}
+
+.card{margin-top:15px;min-height:280px;cursor:pointer;perspective:1000px;background:transparent;box-shadow:none;padding:0}
+.card-inner{position:relative;width:100%;height:280px;transition:transform .55s;transform-style:preserve-3d}
+.card.flipped .card-inner{transform:rotateY(180deg)}
+.card-face{position:absolute;inset:0;border-radius:22px;padding:20px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;backface-visibility:hidden;box-shadow:0 10px 25px #18364a22}
+.card-front{background:linear-gradient(145deg,#fff6ce,#ffe49a)}
+.card-back{background:linear-gradient(145deg,#e5fff1,#bdebcf);transform:rotateY(180deg)}
+.card-label{font-size:11px;font-weight:900;letter-spacing:1px;margin-bottom:10px;color:#087f8c}
+.tap-hint{font-size:11px;color:#6b7880;margin-top:12px}
+.cardtext{font-size:16px;font-weight:800;line-height:1.45;color:#17324d}
+
+.progress{text-align:center;margin:10px;font-size:13px;font-weight:bold;color:#446}
+.buttons{display:flex;gap:8px;margin-top:12px}
+.nav{flex:1;border:0;border-radius:12px;padding:12px;font-weight:800;cursor:pointer;font-size:13px}
+.next{background:#008c95;color:#fff}
+.prev{background:#dbe8ec;color:#2c4e5e}
+.shuffle{background:#ffbd55;color:#513100}
+.done{display:none;margin-top:15px;background:#eaffef;border-radius:18px;padding:18px;text-align:center;line-height:1.5;font-size:14px}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- HOME SCREEN -->
+  <section id="home">
+    <div class="hero">
+      <div class="hero-top">
+        <h1>Jelajah Indonesia</h1>
+        <p>Pelajari letak geografis dan dampaknya di setiap pulau Indonesia melalui 10 Flashcard interaktif!</p>
+      </div>
+      <div class="illustration">
+        <div class="sun"></div>
+        <div class="cloud c1"></div>
+        <div class="cloud c2"></div>
+        <div class="star s1">✦</div>
+        <div class="star s2">✦</div>
+        <div class="star s3">✦</div>
+        <div class="adventure">
+          <div class="compass">🧭</div>
+          <div class="caption">MISI FLASHCARD</div>
+          <div class="mini">10 Soal • Letak & Dampak</div>
+        </div>
+      </div>
+      <div>
+        <button type="button" class="start" id="btnStartApp">🚀 MULAI PETUALANGAN</button>
+        <div class="credit">Pilih pulau untuk memulai tantangan flashcard.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MAP SCREEN -->
+  <section id="mapScreen">
+    <header>
+      <small>MISI JELAJAH GEOGRAFIS</small>
+      <h2>🌟 Pilih Pulau Kelompokmu</h2>
+      <p>Setiap pulau memiliki 10 flashcard letak geografis & dampaknya.</p>
+    </header>
+    <main>
+      <div class="tip">
+        <b>🎯 Misi Flashcard</b><br>
+        Pilih pulau → Selesaikan 10 kartu soal & jawaban → Pahami letak geografis dan dampaknya → Siap presentasi!
+      </div>
+
+      <div class="island-grid">
+        <div class="island-card" data-island="Sumatera">
+          <div class="island-icon">🌴</div><div>Sumatera</div>
+        </div>
+        <div class="island-card" data-island="Jawa">
+          <div class="island-icon">🌾</div><div>Jawa</div>
+        </div>
+        <div class="island-card" data-island="Kalimantan">
+          <div class="island-icon">🌳</div><div>Kalimantan</div>
+        </div>
+        <div class="island-card" data-island="Sulawesi">
+          <div class="island-icon">🌊</div><div>Sulawesi</div>
+        </div>
+        <div class="island-card" data-island="Papua">
+          <div class="island-icon">🦜</div><div>Papua</div>
+        </div>
+        <div class="island-card" data-island="Bangka Belitung">
+          <div class="island-icon">🏝️</div><div>Bangka Belitung</div>
+        </div>
+        <div class="island-card" data-island="Kepulauan Seribu">
+          <div class="island-icon">⛵</div><div>Kepulauan Seribu</div>
+        </div>
+      </div>
+    </main>
+  </section>
+
+  <!-- MISSION SCREEN -->
+  <section id="mission">
+    <header>
+      <small>MISI FLASHCARD (10 SOAL)</small>
+      <h2 id="mname">🧭 Nama Pulau</h2>
+      <p>Pelajari letak geografis dan dampaknya bagi pulau ini.</p>
+    </header>
+    <main>
+      <button type="button" class="back btn-to-map">← Pilih Pulau Lain</button>
+      <div class="title" id="mtitle">10 Flashcard</div>
+      <div class="sub">🎴 Ketuk kartu untuk membalik dan melihat jawaban.</div>
+      <div class="progress" id="prog">Kartu 1 dari 10</div>
+
+      <div id="card" class="card" role="button" tabindex="0" aria-label="Flashcard. Ketuk untuk membalik kartu">
+        <div class="card-inner">
+          <div class="card-face card-front">
+            <div class="card-label">🎯 PERTANYAAN</div>
+            <div class="cardtext" id="ct">Soal Pertanyaan</div>
+            <div class="tap-hint">👆 Ketuk kartu untuk melihat jawaban</div>
+          </div>
+          <div class="card-face card-back">
+            <div class="card-label">💡 JAWABAN & DAMPAK</div>
+            <div class="cardtext" id="at">Jawaban Soal</div>
+            <div class="tap-hint">👆 Ketuk lagi untuk kembali ke soal</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="buttons">
+        <button type="button" class="nav prev" id="btnPrev">← Sebelah</button>
+        <button type="button" class="nav shuffle" id="btnShuffle">🔀 Acak</button>
+        <button type="button" class="nav next" id="btnNext">Berikutnya →</button>
+      </div>
+
+      <div id="done" class="done">
+        <b>🎉 Misi 10 Flashcard Selesai!</b><br>
+        Kalian telah mempelajari letak geografis dan dampaknya. Gunakan pengetahuan ini untuk presentasi kelompok!<br><br>
+        <button type="button" class="back btn-to-map">🗺️ Kembali ke Peta Pulau</button>
+      </div>
+    </main>
+  </section>
+
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+
+  const B = {
+    "Sumatera": [
+      ["Perairan internasional penting apa yang membatasi Pulau Sumatera di sebelah timur?", "Selat Malaka."],
+      ["Samudra luas apa yang membentang di sebelah barat Pulau Sumatera?", "Samudra Hindia."],
+      ["Apa dampak letak Sumatera di Selat Malaka bagi kegiatan ekonomi?", "Menjadi jalur pelayaran kapal internasional yang ramai sehingga mendorong tumbuh pelabuhan dan perdagangan."],
+      ["Apa dampak letak geografis Sumatera terhadap iklim dan curah hujan?", "Mengalami iklim tropis dengan curah hujan tinggi yang dipengaruhi angin muson."],
+      ["Selat apa yang memisahkan Pulau Sumatera dengan Pulau Jawa di sebelah selatan?", "Selat Sunda."],
+      ["Apa dampak curah hujan tinggi dan tanah vulkanik bagi pertanian di Sumatera?", "Suburnya lahan untuk perkebunan besar seperti kelapa sawit, karet, kopi, dan teh."],
+      ["Bagaimana posisi geografis Sumatera mempengaruhi kebudayaan masyarakat pesisir?", "Terjadi pembauran budaya akibat interaksi dengan pedagang asing seperti Arab, Tiongkok, dan India."],
+      ["Apa dampak letak geografis Sumatera yang kaya hutan hujan tropis bagi keanekaragaman hayati?", "Menjadi habitat fauna Asiatis seperti Harimau Sumatera, Gajah, dan Orangutan."],
+      ["Laut apa yang berada di sebelah utara perairan Pulau Sumatera?", "Laut Cina Selatan atau Laut Andaman."],
+      ["Apa tantangan geografis yang dihadapi Sumatera karena berada di batas perairan terbuka?", "Rawan terjadinya penyelundupan barang ilegal dan pencurian ikan di perbatasan maritim."]
+    ],
+    "Jawa": [
+      ["Samudra apa yang berada tepat di sebelah selatan Pulau Jawa?", "Samudra Hindia."],
+      ["Laut apa yang membatasi Pulau Jawa di sebelah utara?", "Laut Jawa."],
+      ["Apa dampak letak Jawa di antara Laut Jawa dan Samudra Hindia bagi mata pencaharian pesisir?", "Banyak penduduk bekerja sebagai nelayan dan berkembang industri perikanan tangkap."],
+      ["Apa dampak letak tanah vulkanik Jawa serta iklim tropisnya terhadap sektor pertanian?", "Jawa menjadi pusat penghasil padi dan bahan pangan utama."],
+      ["Selat apa yang memisahkan Pulau Jawa dengan Pulau Bali di sebelah timur?", "Selat Bali."],
+      ["Mengapa letak geografis Jawa menjadikannya pulau dengan penduduk terpadat di Indonesia?", "Letaknya strategis di jalur transportasi antarpulau, mempermudah akses perdagangan dan pusat pemerintahan."],
+      ["Apa pengaruh letak geografis Jawa terhadap jalur transportasi udara dan laut?", "Menjadi pusat transit utama pelayaran dan penerbangan nasional dari barat ke timur Indonesia."],
+      ["Selat apa yang membatasi Pulau Jawa di sebelah barat?", "Selat Sunda."],
+      ["Apa dampak iklim tropis muson terhadap musim di Pulau Jawa?", "Terjadinya pergantian musim hujan dan musim kemarau yang teratur."],
+      ["Apa ancaman potensi alam yang dialami Jawa karena berhadapan langsung dengan Samudra Hindia?", "Ancaman gelombang tinggi dan potensi tsunami di pesisir pantai selatan."]
+    ],
+    "Kalimantan": [
+      ["Negara tetangga apa yang berbatasan darat langsung dengan Kalimantan di sebelah utara?", "Malaysia dan Brunei Darussalam."],
+      ["Laut apa yang membentang di sebelah selatan Pulau Kalimantan?", "Laut Jawa."],
+      ["Selat apa yang memisahkan Pulau Kalimantan dengan Pulau Sulawesi di sebelah timur?", "Selat Makassar."],
+      ["Apa dampak letak geografis Kalimantan yang dilintasi garis khatulistiwa?", "Memiliki iklim tropis basah dengan penyinaran matahari sepanjang tahun dan suhu hangat."],
+      ["Bagaimana kondisi geografis sungai-sungai besar mempengaruhi transportasi di Kalimantan?", "Sungai dimanfaatkan sebagai sarana transportasi utama dan tempat pasar terapung."],
+      ["Apa dampak letak geografis Kalimantan bagi kekayaan hutan hujan tropisnya?", "Menjadi salah satu paru-paru dunia dengan keanekaragaman hayati tinggi seperti Orangutan."],
+      ["Apa keunggulan letak geologis Kalimantan dibandingkan pulau besar lainnya di Indonesia?", "Posisinya relatif aman dari potensi gempa bumi karena jauh dari lempeng tektonik aktif."],
+      ["Selat apa yang memisahkan Pulau Kalimantan dengan Pulau Sumatera di sebelah barat?", "Selat Karimata."],
+      ["Apa dampak kekayaan alam Kalimantan akibat letak geografisnya terhadap perekonomian?", "Melimpahnya hasil tambang seperti batu bara, minyak bumi, serta hasil perkebunan sawit."],
+      ["Apa tantangan perbatasan darat yang dihadapi Kalimantan?", "Perlu pengawasan ketat terhadap jalur perbatasan negara untuk mencegah lalu lintas ilegal."]
+    ],
+    "Sulawesi": [
+      ["Laut apa yang membentang di sebelah utara Pulau Sulawesi?", "Laut Sulawesi."],
+      ["Selat apa yang memisahkan Sulawesi dengan Pulau Kalimantan di sebelah barat?", "Selat Makassar."],
+      ["Laut apa yang membatasi Sulawesi di bagian selatan?", "Laut Flores."],
+      ["Apa dampak letak geografis Sulawesi yang dikelilingi laut dalam bagi keanekaragaman lautnya?", "Memiliki terumbu karang yang sangat kaya dan menjadi pusat kawasan Segitiga Terumbu Karang dunia."],
+      ["Garis khayal pembagi fauna apa yang melintasi wilayah antara Kalimantan dan Sulawesi?", "Garis Wallace."],
+      ["Apa dampak letak Sulawesi di kawasan peralihan geologis bagi jenis hewannya?", "Memiliki fauna unik khas peralihan seperti Anoa, Babirusa, dan Burung Maleo."],
+      ["Mengapa letak geografis pesisir Sulawesi membentuk budaya bahari yang kuat pada masyarakatnya?", "Karena wilayah lautnya luas, mendorong lahirnya pelaut tangguh dengan Kapal Phinisi."],
+      ["Laut apa yang berada di sebelah timur Pulau Sulawesi?", "Laut Maluku dan Laut Banda."],
+      ["Apa dampak letak strategis Selat Makassar bagi jalur pelayaran nasional?", "Menjadi jalur pelayaran penting untuk pengangkutan kapal logistik dunia."],
+      ["Apa potensi ekonomi berbasis laut terbesar di Sulawesi akibat kondisi geografisnya?", "Pariwisata bahari seperti Bunaken dan Wakatobi serta budidaya rumput laut."]
+    ],
+    "Papua": [
+      ["Negara apa yang berbatasan darat langsung dengan Papua di sebelah timur?", "Papua Nugini."],
+      ["Samudra luas apa yang membentang di batas sebelah utara Pulau Papua?", "Samudra Pasifik."],
+      ["Laut apa yang membatasi Papua di sebelah selatan dan memisahkannya dengan Australia?", "Laut Arafuru."],
+      ["Apa dampak kedekatan geografis Papua dengan Benua Australia terhadap jenis faunanya?", "Memiliki fauna tipe Australis seperti Burung Cendrawasih dan Kanguru Pohon."],
+      ["Bagaimana kondisi iklim di wilayah pegunungan tinggi pedalaman Papua?", "Memiliki iklim dingin di puncak pegunungan tinggi seperti Puncak Jaya."],
+      ["Apa dampak letak geologis Papua terhadap potensi sumber daya tambang?", "Memiliki cadangan barang tambang yang sangat melimpah seperti emas dan tembaga."],
+      ["Apa keanekaragaman alam hutan hujan tropis yang dimiliki Papua akibat kondisi geografisnya?", "Hutan hujan yang masih luas menjadi habitat flora dan fauna langka."],
+      ["Bagaimana topografi geografis pegunungan dan lembah mempengaruhi kehidupan suku asli Papua?", "Suku lokal hidup terisolasi secara alami sehingga memiliki beragam bahasa dan adat budaya."],
+      ["Apa nama laut di batas barat Pulau Papua yang kaya akan terumbu karang?", "Perairan Raja Ampat."],
+      ["Apa tantangan utama pembangunan di Papua berdasarkan kondisi geografisnya?", "Wilayahnya sangat luas dengan pegunungan terjal sehingga transportasi udara sangat dibutuhkan."]
+    ],
+    "Bangka Belitung": [
+      ["Di sebelah timur pulau manakah letak Kepulauan Bangka Belitung?", "Pulau Sumatera."],
+      ["Selat apa yang memisahkan Pulau Bangka dengan Pulau Sumatera?", "Selat Bangka."],
+      ["Selat apa yang memisahkan Pulau Bangka dan Pulau Belitung?", "Selat Gaspar."],
+      ["Laut apa yang berada di sebelah utara Kepulauan Bangka Belitung?", "Laut Natuna atau Laut Cina Selatan."],
+      ["Apa dampak letak geologis Kepulauan Bangka Belitung terhadap hasil tambangnya?", "Kaya akan endapan mineral timah terbesar di Indonesia."],
+      ["Bagaimana kondisi geografis pesisir pantai Bangka Belitung mempengaruhi kepariwisataan?", "Memiliki pantai berbatu granit unik dan pasir putih."],
+      ["Laut apa yang membentang di sebelah selatan Kepulauan Bangka Belitung?", "Laut Jawa."],
+      ["Apa dampak letak strategis kepulauan ini di perairan barat Indonesia?", "Menjadi jalur transit pelayaran antar-pulau antara Sumatera, Jawa, dan Kalimantan."],
+      ["Bagaimana pengaruh iklim tropis kepulauan bagi komoditas pertanian Bangka Belitung?", "Sangat cocok untuk budidaya tanaman rempah seperti lada putih."],
+      ["Apa mata pencaharian utama masyarakat Bangka Belitung yang dipengaruhi kondisi geografisnya?", "Penambang timah, nelayan tangkap, dan petani lada serta sawit."]
+    ],
+    "Kepulauan Seribu": [
+      ["Di sebelah utara pulau manakah posisi Kepulauan Seribu berada?", "Pulau Jawa."],
+      ["Kepulauan Seribu termasuk dalam wilayah administratif provinsi mana?", "DKI Jakarta."],
+      ["Laut apa yang mengelilingi gugusan Kepulauan Seribu?", "Laut Jawa."],
+      ["Apa dampak letak Kepulauan Seribu yang dekat dengan ibukota Jakarta?", "Menjadi destinasi wisata bahari utama dan daerah konservasi laut."],
+      ["Bagaimana letak geografis pulau kecil mempengaruhi sumber air bersih penduduknya?", "Pasokan air tawar terbatas sehingga memanfaatkan penampung hujan dan desalinasi."],
+      ["Apa dampak lingkungan perairan Kepulauan Seribu akibat letaknya di dekat Teluk Jakarta?", "Rawan terkena dampak limbah dari daratan dan kegiatan pelayaran muara sungai."],
+      ["Apa fungsi ekologis terumbu karang dan mangrove di Kepulauan Seribu?", "Melindungi pantai pulau kecil dari abrasi gelombang Laut Jawa."],
+      ["Bagaimana mata pencaharian utama warga Kepulauan Seribu sesuai kondisi lingkungannya?", "Sebagian besar bekerja di sektor perikanan tangkap, budidaya ikan laut, dan jasa pariwisata."],
+      ["Bagaimana sarana transportasi utama yang menghubungkan Kepulauan Seribu dengan Jakarta?", "Menggunakan kapal motor atau kapal cepat dari Pelabuhan Muara Angke atau Ancol."],
+      ["Apa status perlindungan alam yang diberikan pada kawasan ini karena keunikan geografisnya?", "Ditetapkan sebagai kawasan Taman Nasional Laut Kepulauan Seribu."]
+    ]
+  };
+
+  let island = "";
+  let cards = [];
+  let i = 0;
+  let isFlipped = false;
+
+  const homeSec = document.getElementById("home");
+  const mapSec = document.getElementById("mapScreen");
+  const missionSec = document.getElementById("mission");
+
+  const cardElem = document.getElementById("card");
+  const ctElem = document.getElementById("ct");
+  const atElem = document.getElementById("at");
+  const progElem = document.getElementById("prog");
+  const doneElem = document.getElementById("done");
+
+  function mix(arr) {
+    return [...arr].sort(() => Math.random() - 0.5);
+  }
+
+  function openMapScreen() {
+    homeSec.style.display = "none";
+    missionSec.style.display = "none";
+    mapSec.style.display = "block";
+    window.scrollTo(0, 0);
+  }
+
+  function startIsland(name) {
+    island = name;
+    cards = mix(B[name]);
+    i = 0;
+    isFlipped = false;
+
+    homeSec.style.display = "none";
+    mapSec.style.display = "none";
+    missionSec.style.display = "block";
+
+    document.getElementById("mname").textContent = "🧭 " + name;
+    document.getElementById("mtitle").textContent = "10 Flashcard " + name;
+    doneElem.style.display = "none";
+    cardElem.style.display = "flex";
+    document.querySelector(".buttons").style.display = "flex";
+
+    renderCard();
+    window.scrollTo(0, 0);
+  }
+
+  function renderCard() {
+    isFlipped = false;
+    cardElem.className = "card";
+    ctElem.textContent = cards[i][0];
+    atElem.textContent = cards[i][1];
+    progElem.textContent = `Kartu ${i + 1} dari 10`;
+    document.getElementById("btnNext").textContent = (i === 9) ? "Selesai ✓" : "Berikutnya →";
+  }
+
+  // EVENT LISTENERS
+
+  document.getElementById("btnStartApp").addEventListener("click", openMapScreen);
+
+  document.querySelectorAll(".island-card").forEach(cardBtn => {
+    cardBtn.addEventListener("click", function() {
+      const selectedIsland = this.getAttribute("data-island");
+      if (selectedIsland) {
+        startIsland(selectedIsland);
+      }
+    });
+  });
+
+  document.querySelectorAll(".btn-to-map").forEach(btn => {
+    btn.addEventListener("click", openMapScreen);
+  });
+
+  function flipCard() {
+    isFlipped = !isFlipped;
+    cardElem.className = isFlipped ? "card flipped" : "card";
+  }
+
+  cardElem.addEventListener("click", flipCard);
+  cardElem.addEventListener("keydown", function(event) {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      flipCard();
+    }
+  });
+
+  document.getElementById("btnNext").addEventListener("click", function() {
+    if (i < 9) {
+      i++;
+      renderCard();
+    } else {
+      doneElem.style.display = "block";
+      cardElem.style.display = "none";
+      document.querySelector(".buttons").style.display = "none";
+    }
+  });
+
+  document.getElementById("btnPrev").addEventListener("click", function() {
+    if (i > 0) {
+      i--;
+      renderCard();
+    }
+  });
+
+  document.getElementById("btnShuffle").addEventListener("click", function() {
+    cards = mix(B[island]);
+    i = 0;
+    doneElem.style.display = "none";
+    cardElem.style.display = "flex";
+    document.querySelector(".buttons").style.display = "flex";
+    renderCard();
+  });
+
+});
+</script>
+</body>
+</html>
